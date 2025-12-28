@@ -22,14 +22,14 @@ A high-level, **Hinglish-inspired** programming language designed to express log
 
 ### Program Structure
 
-Every MasalaScript program starts with `Chal bhai suru kar` and ends with `bas khatam karo`:
+Every MasalaScript program starts with `action!` and ends with `paisa vasool`:
 
 ```masalascript
-Chal bhai suru kar
+action!
 
 // Your program logic goes here
 
-bas khatam karo
+paisa vasool
 ```
 
 ### Variables
@@ -83,7 +83,7 @@ ek baat bataun: result  // Outputs: 8
 ## 📖 Complete Example
 
 ```masalascript
-Chal bhai suru kar
+action!
 
 // Grade checking program
 maan lo studentName = "Aman"
@@ -101,7 +101,7 @@ agar kismat rahi (score >= 90) {
     ek baat bataun: "Grade: D - Keep improving!"
 }
 
-bas khatam karo
+paisa vasool
 ```
 
 ## 🎮 Try It Online
@@ -116,8 +116,8 @@ For complete documentation, visit **[https://masala-script.vercel.app/](https://
 
 | Keyword | Meaning | Usage |
 |---------|---------|-------|
-| `Chal bhai suru kar` | Start program | Program entry point |
-| `bas khatam karo` | End program | Program exit point |
+| `action!` | Start program | Program entry point |
+| `paisa vasool` | End program | Program exit point |
 | `maan lo` | Variable declaration | `maan lo x = 10` |
 | `ek baat bataun:` | Print/Output | `ek baat bataun: "Hello"` |
 | `agar kismat rahi` | If statement | Conditional logic |
@@ -175,6 +175,4 @@ This project is licensed under the MIT License.
 
 ---
 
-**Designed with flavor and discipline 🌶️**
-
-**Developed by [TufelMalik](https://www.linkedin.com/in/tufel-malik-9609b3264/)**
+**Made with flavor and discipline 🌶️**
