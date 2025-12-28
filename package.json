@@ -1,0 +1,28 @@
+{
+  "name": "masalascript",
+  "version": "1.0.0",
+  "description": "A Hinglish-inspired programming language compiler and interpreter",
+  "main": "src/masalascript.js",
+  "bin": {
+    "masalascript": "./src/cli.js"
+  },
+  "scripts": {
+    "masala": "node src/cli.js",
+    "test": "node tests/test-suite.js",
+    "start": "node src/cli.js"
+  },
+  "keywords": [
+    "programming-language",
+    "compiler",
+    "interpreter",
+    "hinglish",
+    "masalascript"
+  ],
+  "author": "TufelMalik",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TufelMalik/MasalaScript.git"
+  }
+}
