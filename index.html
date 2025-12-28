@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MasalaScript - A Hinglish Programming Language</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌶️</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -19,13 +21,32 @@
             box-sizing: border-box;
         }
 
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a0f2e 50%, #0f1419 100%);
+            background: #080810 !important;
+            background-image: linear-gradient(-45deg, #080810, #0d0d1a, #101020, #0a1628, #0d0d1a, #080810) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 25s ease infinite;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            min-height: 100vh;
+            color: #f1f5f9;
         }
 
         code,
@@ -33,12 +54,22 @@
             font-family: 'Fira Code', monospace;
         }
 
-        /* Radial glow background effect */
+        /* Radial glow background effect - subtle overlay only */
         .radial-glow {
             position: relative;
-            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(45, 212, 191, 0.15), transparent 50%),
-                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(251, 146, 60, 0.08), transparent 50%),
-                linear-gradient(135deg, #0f0f23 0%, #1a0f2e 50%, #0f1419 100%);
+        }
+
+        .radial-glow::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(45, 212, 191, 0.08), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(99, 102, 241, 0.05), transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         /* Hero glow effect */
@@ -171,7 +202,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(50px);
             }
 
             to {
@@ -181,7 +212,37 @@
         }
 
         .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Scroll-triggered animations */
+        .scroll-animate {
+            opacity: 0.3;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .scroll-animate.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered animation delays */
+        .scroll-animate:nth-child(1) {
+            transition-delay: 0s;
+        }
+
+        .scroll-animate:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+
+        .scroll-animate:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+
+        .scroll-animate:nth-child(4) {
+            transition-delay: 0.3s;
         }
 
         /* Syntax highlighting */
@@ -227,9 +288,10 @@
             top: 0;
             bottom: 0;
             width: 250px;
-            background: rgba(15, 15, 35, 0.95);
-            border-right: 1px solid rgba(45, 212, 191, 0.2);
+            background: #0c1117;
+            border-right: 1px solid rgba(45, 212, 191, 0.12);
             padding: 2rem 0;
+            padding-bottom: 4rem;
             overflow-y: auto;
             z-index: 50;
             transition: transform 0.3s ease;
@@ -271,8 +333,36 @@
             border-bottom: 1px solid rgba(45, 212, 191, 0.2);
         }
 
-        .playground-editor {
+        .editor-container {
+            display: flex;
+            background: #1a1f2e;
             min-height: 300px;
+            max-height: 400px;
+            overflow: hidden;
+        }
+
+        .line-numbers {
+            padding: 1.5rem 0.75rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            background: #151922;
+            color: #64748B;
+            text-align: right;
+            user-select: none;
+            border-right: 1px solid rgba(45, 212, 191, 0.2);
+            overflow: hidden;
+            min-width: 40px;
+        }
+
+        .line-numbers div {
+            height: 1.5em;
+        }
+
+        .playground-editor {
+            flex: 1;
+            min-height: 300px;
+            max-height: 400px;
             padding: 1.5rem;
             font-family: 'Fira Code', monospace;
             font-size: 0.875rem;
@@ -281,8 +371,10 @@
             color: #F1F5F9;
             border: none;
             outline: none;
-            resize: vertical;
-            width: 100%;
+            resize: none;
+            overflow-y: auto;
+            white-space: pre;
+            overflow-wrap: normal;
         }
 
         .playground-output {
@@ -410,6 +502,23 @@
                 font-size: 0.875rem;
             }
         }
+
+        /* Custom select dropdown styling */
+        #exampleSelect {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232DD4BF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.2rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        #exampleSelect:hover {
+            border-color: rgba(45, 212, 191, 0.5);
+        }
     </style>
 
     <script>
@@ -431,32 +540,56 @@
 
 <body class="radial-glow text-gray-100">
 
-    <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-    </button>
 
     <!-- Sidebar Navigation -->
     <nav class="sidebar" id="sidebar">
         <div class="px-6 mb-6">
-            <h2 class="text-primary font-bold text-lg">MasalaScript</h2>
+            <h2 class="font-bold text-lg"><span class="text-primary">Masala</span><span class="text-white">Script</span>
+            </h2>
             <p class="text-xs text-gray-500 mt-1">v1.0.0</p>
         </div>
         <a href="#hero" class="sidebar-link active">Overview</a>
         <a href="#playground" class="sidebar-link">Playground</a>
         <a href="#structure" class="sidebar-link">Program Structure</a>
+        <a href="#printing" class="sidebar-link">Printing Output</a>
         <a href="#variables" class="sidebar-link">Variables</a>
         <a href="#types" class="sidebar-link">Data Types</a>
         <a href="#conditionals" class="sidebar-link">Conditionals</a>
         <a href="#loops" class="sidebar-link">Loops</a>
         <a href="#functions" class="sidebar-link">Functions</a>
         <a href="#example" class="sidebar-link">Complete Example</a>
+
+        <!-- Developer Credit -->
+        <div class="absolute bottom-6 left-0 right-0 px-6 pt-4 border-t border-primary/10">
+            <p class="text-sm flex items-center gap-1"><span class="text-white">Developed by </span><a
+                    href="https://www.linkedin.com/in/tufel-malik-9609b3264/?originalSubdomain=in" target="_blank"
+                    class="text-primary hover:underline inline-flex items-center gap-1">TufelMalik<svg class="w-3 h-3"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg></a></p>
+        </div>
     </nav>
 
     <!-- Main Content -->
     <div class="main-with-sidebar">
+
+        <!-- Sticky Header -->
+        <header
+            class="sticky top-0 z-30 backdrop-blur-md bg-[#0c1117]/80 border-b border-primary/10 py-3 px-6 md:hidden">
+            <div class="flex items-center justify-start gap-4">
+                <button class="bg-primary/10 border border-primary/30 text-primary p-2 rounded-lg"
+                    onclick="toggleSidebar()">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <h1 class="font-bold text-lg"><span class="text-primary">Masala</span><span
+                        class="text-white">Script</span></h1>
+            </div>
+        </header>
+
 
         <!-- HERO SECTION -->
         <section id="hero"
@@ -514,7 +647,14 @@
             <div class="playground">
                 <div class="playground-header">
                     <h3 class="text-lg font-semibold text-gray-100">Code Editor</h3>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-wrap">
+                        <select id="exampleSelect" onchange="loadExample()"
+                            class="bg-surface border border-primary/30 text-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-primary">
+                            <option value="">📚 Examples</option>
+                            <option value="print">Ek Baat Bataun </option>
+                            <option value="condition">Agar Kismat Rahi</option>
+                            <option value="loop">Jab Tak Hai Jaan </option>
+                        </select>
                         <button class="btn-secondary" onclick="runCode()">
                             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -532,18 +672,22 @@
                         </button>
                     </div>
                 </div>
-                <textarea class="playground-editor" id="codeEditor" placeholder="Write your MasalaScript code here...">action!
+                <div class="editor-container">
+                    <div class="line-numbers" id="lineNumbers"></div>
+                    <textarea class="playground-editor" id="codeEditor"
+                        placeholder="Write your MasalaScript code here..." spellcheck="false">Chal bhai suru kar
 
 maan lo name = "Aman"
 maan lo score = 85
 
 agar kismat rahi (score >= 75) {
-    ek baat bataun: name, "has passed!"
+    ek baat bataun: name, "Bhai tuto pass ho gaya party kab dega?"
 } warna {
-    ek baat bataun: name, "needs to improve"
+    ek baat bataun: name, "Tu kuch nay kar sakta life me"
 }
 
-paisa vasool</textarea>
+bas khatam karo</textarea>
+                </div>
                 <div class="playground-output" id="output">
                     <div class="text-gray-500 text-sm">Output will appear here...</div>
                 </div>
@@ -563,15 +707,47 @@ paisa vasool</textarea>
             <div id="structure" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Program Structure</h3>
                 <p class="text-gray-400 mb-6">
-                    Every MasalaScript program begins with <span class="inline-code">action!</span> and ends with <span
-                        class="inline-code">paisa vasool</span>
+                    Every MasalaScript program has a clear beginning and end. Start your code with
+                    <span class="inline-code">Chal bhai suru kar</span> ("Let's start brother!") and close it with
+                    <span class="inline-code">bas khatam karo</span> ("that's it, finish!").
+                    This structure ensures your program is properly enclosed and ready to execute.
                 </p>
 
-                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">action!</span>
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">Chal bhai suru kar</span>
 
 <span class="comment">// Your program logic goes here</span>
 
-<span class="primary-keyword">paisa vasool</span></code></pre>
+<span class="primary-keyword">bas khatam karo</span></code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Printing Output -->
+            <div id="printing" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Printing Output</h3>
+                <p class="text-gray-400 mb-6">
+                    To display output in MasalaScript, use <span class="inline-code">ek baat bataun:</span>
+                    (meaning "let me tell you something"). You can print strings, numbers, variables,
+                    or combine multiple values separated by commas.
+                </p>
+
+                <pre
+                    class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="comment">// Print a simple message</span>
+<span class="keyword">ek baat bataun:</span> <span class="string">"Hello, World!"</span>
+
+<span class="comment">// Print a variable</span>
+<span class="keyword">maan lo</span> name = <span class="string">"Aman"</span>
+<span class="keyword">ek baat bataun:</span> name
+
+<span class="comment">// Print multiple values</span>
+<span class="keyword">ek baat bataun:</span> <span class="string">"Score:"</span>, 95
+
+<span class="comment">// Combine text and variables</span>
+<span class="keyword">ek baat bataun:</span> <span class="string">"Hello,"</span>, name, <span class="string">"Welcome!"</span></code></pre>
+
+                <p class="text-gray-500 text-sm mt-4">
+                    Values separated by commas will be printed with a space between them.
+                </p>
             </div>
 
             <div class="section-divider"></div>
@@ -580,7 +756,9 @@ paisa vasool</textarea>
             <div id="variables" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Variables</h3>
                 <p class="text-gray-400 mb-6">
-                    Declare variables using <span class="inline-code">maan lo</span> (meaning "assume" or "let it be")
+                    Declare variables using <span class="inline-code">maan lo</span> (meaning "assume" or "let it be").
+                    MasalaScript is dynamically typed, so you don't need to specify types explicitly.
+                    Variables can hold numbers, strings, booleans, or null values and can be reassigned anytime.
                 </p>
 
                 <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="keyword">maan lo</span> count = 10
@@ -639,9 +817,11 @@ paisa vasool</textarea>
             <div id="conditionals" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Conditionals</h3>
                 <p class="text-gray-400 mb-6">
-                    Use <span class="inline-code">agar kismat rahi</span> for if-statements, <span
-                        class="inline-code">nahi to</span> for else-if, and <span class="inline-code">warna</span> for
-                    else
+                    Control the flow of your program with conditional statements. Use
+                    <span class="inline-code">agar kismat rahi</span> ("if luck favors") for if-statements,
+                    <span class="inline-code">nahi to</span> ("otherwise") for else-if branches, and
+                    <span class="inline-code">warna</span> ("else") for the fallback case.
+                    You can chain multiple conditions for complex decision logic.
                 </p>
 
                 <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">agar kismat rahi</span> (score >= 90) {
@@ -659,14 +839,24 @@ paisa vasool</textarea>
             <div id="loops" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Loops</h3>
                 <p class="text-gray-400 mb-6">
-                    Loop while a condition is true using <span class="inline-code">jab tak hai jaan</span> ("as long as
-                    there's life")
+                    Repeat actions using <span class="inline-code">jab tak hai jaan</span> ("as long as there's life")
+                    for while loops. The loop continues as long as the condition remains true.
+                    Use <span class="inline-code">me bahar ja raha hu</span> ("I'm going out") to break out of a loop
+                    early.
                 </p>
 
                 <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="keyword">maan lo</span> i = 1
 
 <span class="primary-keyword">jab tak hai jaan</span> (i <= 5) {
     <span class="keyword">ek baat bataun:</span> i
+    i = i + 1
+}
+
+<span class="comment">// Break example:</span>
+<span class="primary-keyword">jab tak hai jaan</span> (sach) {
+    <span class="keyword">agar kismat rahi</span> (i > 10) {
+        <span class="accent-keyword">me bahar ja raha hu</span>
+    }
     i = i + 1
 }</code></pre>
             </div>
@@ -677,8 +867,10 @@ paisa vasool</textarea>
             <div id="functions" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Functions</h3>
                 <p class="text-gray-400 mb-6">
-                    Define functions with <span class="inline-code">climax</span> and return values using <span
-                        class="inline-code">dialogue wapas do</span>
+                    Create reusable code blocks with <span class="inline-code">climax</span> (the main event!) for
+                    function definition.
+                    Return values using <span class="inline-code">dialogue wapas do</span> ("return the dialogue").
+                    Functions support parameters and can be called anywhere after their definition.
                 </p>
 
                 <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">climax</span> add(a, b) {
@@ -696,10 +888,13 @@ paisa vasool</textarea>
             <div id="example" class="mb-20 animate-fade-in">
                 <h3 class="text-2xl font-bold text-gray-100 mb-4">Complete Example</h3>
                 <p class="text-gray-400 mb-6">
-                    A full MasalaScript program saved as <span class="inline-code">grade-checker.ms</span>
+                    Here's a complete MasalaScript program demonstrating variables, conditionals, and output.
+                    Save this as <span class="inline-code">grade-checker.ms</span> and run it to see MasalaScript in
+                    action.
+                    This example shows how all the concepts work together in a real program.
                 </p>
 
-                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">action!</span>
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">Chal bhai suru kar</span>
 
 <span class="comment">// Grade checking program</span>
 <span class="keyword">maan lo</span> studentName = <span class="string">"Aman"</span>
@@ -717,7 +912,7 @@ paisa vasool</textarea>
     <span class="keyword">ek baat bataun:</span> <span class="string">"Grade: D - Keep improving!"</span>
 }
 
-<span class="primary-keyword">paisa vasool</span></code></pre>
+<span class="primary-keyword">bas khatam karo</span></code></pre>
             </div>
 
             <div class="section-divider"></div>
@@ -766,6 +961,15 @@ paisa vasool</textarea>
                 <p class="text-gray-600 text-xs mt-4">
                     Designed with flavor and discipline 🌶️
                 </p>
+                <p class="text-xs mt-2 flex items-center justify-center gap-1">
+                    <span class="text-white">Developed by </span><a
+                        href="https://www.linkedin.com/in/tufel-malik-9609b3264/?originalSubdomain=in" target="_blank"
+                        class="text-primary hover:underline inline-flex items-center gap-1">TufelMalik<svg
+                            class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg></a>
+                </p>
             </div>
         </footer>
     </div>
@@ -776,13 +980,65 @@ paisa vasool</textarea>
             document.getElementById('sidebar').classList.toggle('open');
         }
 
-        // Close sidebar when clicking on a link (mobile)
+        // Smooth scroll to section with animation
+        function smoothScrollTo(targetId) {
+            const target = document.querySelector(targetId);
+            if (!target) return;
+
+            const targetPosition = target.offsetTop - 20;
+            const startPosition = window.pageYOffset;
+            const distance = targetPosition - startPosition;
+            const duration = 800;
+            let start = null;
+
+            // Easing function for smooth animation
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function animation(currentTime) {
+                if (start === null) start = currentTime;
+                const timeElapsed = currentTime - start;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const ease = easeInOutCubic(progress);
+
+                window.scrollTo(0, startPosition + distance * ease);
+
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        // Add smooth scroll to all sidebar links
         document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                smoothScrollTo(targetId);
+
+                // Update active state
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // Close sidebar on mobile
                 if (window.innerWidth <= 768) {
                     document.getElementById('sidebar').classList.remove('open');
                 }
             });
+        });
+
+        // Add smooth scroll to CTA buttons
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            if (!anchor.classList.contains('sidebar-link')) {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = anchor.getAttribute('href');
+                    smoothScrollTo(targetId);
+                });
+            }
         });
 
         // Update active link on scroll
@@ -821,21 +1077,95 @@ paisa vasool</textarea>
             });
         }
 
-        // Placeholder compiler function
+        // Run MasalaScript code using the real compiler
         function runCode() {
             const code = document.getElementById('codeEditor').value;
             const output = document.getElementById('output');
 
-            output.innerHTML = '<div class="text-yellow-400 mb-2">⚠️ Compiler in development</div>';
-            output.innerHTML += '<div class="text-gray-400 text-sm">Your code:</div>';
-            output.innerHTML += '<pre class="text-gray-300 text-sm mt-2 whitespace-pre-wrap">' + escapeHtml(code) + '</pre>';
-            output.innerHTML += '<div class="text-green-400 mt-4">✓ Syntax appears valid</div>';
+            // Show loading state
+            output.innerHTML = '<div class="text-yellow-400">🌶️ Compiling...</div>';
+
+            // Small delay for visual feedback
+            setTimeout(() => {
+                try {
+                    // Create compiler instance and run
+                    const masala = new MasalaScript();
+                    const result = masala.run(code);
+
+                    if (result.success) {
+                        // Success - show output
+                        if (result.output.length > 0) {
+                            output.innerHTML = '<div class="text-green-400 mb-2">✅ Output:</div>';
+                            output.innerHTML += '<pre class="text-gray-200 text-sm whitespace-pre-wrap">' + escapeHtml(result.output.join('\n')) + '</pre>';
+                        } else {
+                            output.innerHTML = '<div class="text-green-400">✅ Program completed with no output.</div>';
+                        }
+                    } else {
+                        // Error - show error message
+                        output.innerHTML = '<div class="text-red-400 mb-2">❌ Error:</div>';
+                        output.innerHTML += '<pre class="text-red-300 text-sm whitespace-pre-wrap">' + escapeHtml(result.error) + '</pre>';
+                    }
+                } catch (error) {
+                    // Unexpected error
+                    output.innerHTML = '<div class="text-red-400 mb-2">❌ Unexpected Error:</div>';
+                    output.innerHTML += '<pre class="text-red-300 text-sm whitespace-pre-wrap">' + escapeHtml(error.message) + '</pre>';
+                }
+            }, 100);
         }
 
         function clearCode() {
             document.getElementById('codeEditor').value = '';
             document.getElementById('output').innerHTML = '<div class="text-gray-500 text-sm">Output will appear here...</div>';
+            updateLineNumbers();
         }
+
+        // Example code snippets
+        const examples = {
+            print: `Chal bhai suru kar
+
+ek baat bataun: "Arey wah! Code chal gaya!"
+ek baat bataun: "Maa kasam, tu developer ban gaya! 🎉"
+ek baat bataun: "Ab toh party banti hai! 🎊"
+
+bas khatam karo`,
+            condition: `Chal bhai suru kar
+
+maan lo name = "Aman"
+maan lo score = 85
+
+agar kismat rahi (score >= 75) {
+    ek baat bataun: name, "Bhai tuto pass ho gaya party kab dega?"
+} warna {
+    ek baat bataun: name, "Tu kuch nay kar sakta life me"
+}
+
+bas khatam karo`,
+            loop: `Chal bhai suru kar
+
+maan lo count = 5
+
+ek baat bataun: "Rocket launch hone wala hai bhai! 🚀"
+
+jab tak hai jaan (count > 0) {
+    ek baat bataun: count, "... tension mat le!"
+    count = count - 1
+}
+
+ek baat bataun: "BOOM! Gaya rocket Chandrayaan ki taraf! 🌙"
+
+bas khatam karo`
+        };
+
+        function loadExample() {
+            const select = document.getElementById('exampleSelect');
+            const example = examples[select.value];
+            if (example) {
+                document.getElementById('codeEditor').value = example;
+                updateLineNumbers();
+            }
+            select.value = '';
+        }
+
 
         function escapeHtml(text) {
             const map = {
@@ -847,7 +1177,99 @@ paisa vasool</textarea>
             };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
+
+        // Line numbers functionality
+        function updateLineNumbers() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            if (!editor || !lineNumbers) return;
+            const lines = editor.value.split('\n');
+
+            let numbersHtml = '';
+            for (let i = 1; i <= lines.length; i++) {
+                numbersHtml += '<div>' + i + '</div>';
+            }
+            lineNumbers.innerHTML = numbersHtml;
+        }
+
+        // Sync scroll between line numbers and editor
+        function syncScroll() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            if (lineNumbers && editor) {
+                lineNumbers.scrollTop = editor.scrollTop;
+            }
+        }
+
+        // Scroll animation observer - animate elements from bottom to top
+        function initScrollAnimations() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -100px 0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        // Remove the class when out of view so animation can repeat
+                        entry.target.classList.remove('in-view');
+                    }
+                });
+            }, observerOptions);
+
+            // Apply scroll animation to main sections only
+            const selectors = [
+                '#structure', '#printing', '#variables', '#types', '#conditionals',
+                '#loops', '#functions', '#example',
+                '.feature-card', '.playground', '.code-block'
+            ];
+
+            document.querySelectorAll(selectors.join(', ')).forEach(el => {
+                // Skip elements in sidebar and hero
+                if (el.closest('.sidebar') || el.closest('#hero')) return;
+                el.classList.add('scroll-animate');
+                observer.observe(el);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            updateLineNumbers();
+            initScrollAnimations();
+
+            const editor = document.getElementById('codeEditor');
+            if (editor) {
+                editor.addEventListener('input', updateLineNumbers);
+                editor.addEventListener('keyup', updateLineNumbers);
+                editor.addEventListener('scroll', syncScroll);
+            }
+        });
+
+        // Keyboard shortcut to run code (Ctrl/Cmd + Enter)
+        document.addEventListener('DOMContentLoaded', function () {
+            const codeEditor = document.getElementById('codeEditor');
+            if (codeEditor) {
+                codeEditor.addEventListener('keydown', function (e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        runCode();
+                    }
+                });
+            }
+        });
+
+        // Also initialize immediately in case DOMContentLoaded already fired
+        if (document.readyState !== 'loading') {
+            updateLineNumbers();
+            initScrollAnimations();
+        }
     </script>
+
+    <!-- MasalaScript Compiler Bundle -->
+    <script src="../src/browser-bundle.js"></script>
 
 </body>
 
