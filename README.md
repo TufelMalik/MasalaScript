@@ -2,8 +2,13 @@
 
 A high-level, **Hinglish-inspired** programming language designed to express logic with clarity, warmth, and structured control flow.
 
-![MasalaScript Logo](https://img.shields.io/badge/MasalaScript-v1.0.0-2DD4BF?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-FB923C?style=for-the-badge)
+[![MasalaScript Logo](https://img.shields.io/badge/MasalaScript-v1.0.0-2DD4BF?style=for-the-badge)](https://masala-script.vercel.app/)
+[![License](https://img.shields.io/badge/license-MIT-FB923C?style=for-the-badge)](https://github.com/TufelMalik/MasalaScript/blob/main/LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=for-the-badge&logo=vercel)](https://masala-script.vercel.app/)
+
+## 🌐 Live Demo
+
+**Try MasalaScript now:** [https://masala-script.vercel.app/](https://masala-script.vercel.app/)
 
 ## ✨ Features
 
@@ -101,11 +106,11 @@ paisa vasool
 
 ## 🎮 Try It Online
 
-Visit the [Interactive Playground](#) to try MasalaScript directly in your browser!
+Visit **[https://masala-script.vercel.app/](https://masala-script.vercel.app/)** to try MasalaScript directly in your browser!
 
 ## 📚 Documentation
 
-For complete documentation, visit our [official documentation site](https://tufelmalik.github.io/MasalaScript/).
+For complete documentation, visit **[https://masala-script.vercel.app/](https://masala-script.vercel.app/)**
 
 ### Keywords Reference
 
@@ -164,7 +169,7 @@ This project is licensed under the MIT License.
 
 ## 🔗 Links
 
-- [Documentation](https://tufelmalik.github.io/MasalaScript/)
+- **[Live Demo](https://masala-script.vercel.app/)** - Try MasalaScript online
 - [GitHub Repository](https://github.com/TufelMalik/MasalaScript)
 - [Report Issues](https://github.com/TufelMalik/MasalaScript/issues)
 
