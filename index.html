@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MasalaScript - A Hinglish Programming Language</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Pacifico&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a0f2e 50%, #0f1419 100%);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Radial glow background effect */
+        .radial-glow {
+            position: relative;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(45, 212, 191, 0.15), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(251, 146, 60, 0.08), transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a0f2e 50%, #0f1419 100%);
+        }
+
+        /* Hero glow effect */
+        .hero-glow {
+            position: relative;
+        }
+
+        .hero-glow::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(800px, 100%);
+            height: 800px;
+            background: radial-gradient(circle, rgba(45, 212, 191, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Logo styling */
+        .logo-text {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            background: linear-gradient(135deg, #2DD4BF 0%, #FB923C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(45, 212, 191, 0.5);
+            letter-spacing: 2px;
+        }
+
+        /* Code block styling */
+        .code-block {
+            background: #1a1f2e;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .code-block:hover {
+            border-color: rgba(45, 212, 191, 0.4);
+            box-shadow: 0 8px 32px rgba(45, 212, 191, 0.1);
+        }
+
+        .code-block:hover .copy-btn {
+            opacity: 1;
+        }
+
+        /* Copy button */
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            color: #2DD4BF;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: rgba(45, 212, 191, 0.5);
+        }
+
+        .copy-btn.copied {
+            background: rgba(45, 212, 191, 0.3);
+            color: #fff;
+        }
+
+        /* Inline code */
+        .inline-code {
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: #2DD4BF;
+        }
+
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(45, 212, 191, 0.2), transparent);
+            margin: 4rem 0;
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #2DD4BF, #14b8a6);
+            color: #0a0e1a;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(45, 212, 191, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(45, 212, 191, 0.1);
+            border: 2px solid rgba(45, 212, 191, 0.3);
+            color: #2DD4BF;
+            font-weight: 600;
+            padding: 0.625rem 1.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: rgba(45, 212, 191, 0.5);
+        }
+
+        /* Fade in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Syntax highlighting */
+        .keyword {
+            color: #FB923C;
+            font-weight: 500;
+        }
+
+        .primary-keyword {
+            color: #2DD4BF;
+            font-weight: 500;
+        }
+
+        .accent-keyword {
+            color: #F472B6;
+            font-weight: 500;
+        }
+
+        .comment {
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .string {
+            color: #A78BFA;
+        }
+
+        /* Section heading */
+        .section-heading {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #2DD4BF, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sidebar navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 250px;
+            background: rgba(15, 15, 35, 0.95);
+            border-right: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 50;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            color: #2DD4BF;
+            background: rgba(45, 212, 191, 0.05);
+            border-left-color: #2DD4BF;
+        }
+
+        /* Main content with sidebar */
+        .main-with-sidebar {
+            margin-left: 250px;
+        }
+
+        /* Playground styles */
+        .playground {
+            background: rgba(26, 31, 46, 0.5);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            border-radius: 1rem;
+        }
+
+        .playground-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(45, 212, 191, 0.2);
+        }
+
+        .playground-editor {
+            min-height: 300px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            background: #1a1f2e;
+            color: #F1F5F9;
+            border: none;
+            outline: none;
+            resize: vertical;
+            width: 100%;
+        }
+
+        .playground-output {
+            background: #0f1419;
+            border-top: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 1.5rem;
+            min-height: 150px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            color: #94A3B8;
+        }
+
+        /* Table styling */
+        .docs-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+
+        .docs-table thead {
+            background: rgba(45, 212, 191, 0.1);
+        }
+
+        .docs-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            color: #2DD4BF;
+            border-bottom: 1px solid rgba(45, 212, 191, 0.2);
+        }
+
+        .docs-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(45, 212, 191, 0.1);
+            color: #94A3B8;
+        }
+
+        .docs-table tbody tr:hover {
+            background: rgba(45, 212, 191, 0.05);
+        }
+
+        /* Feature card */
+        .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(45, 212, 191, 0.4);
+            transform: translateY(-4px);
+        }
+
+        /* Mobile menu toggle */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 60;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            color: #2DD4BF;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-with-sidebar {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .logo-text {
+                font-size: 2.5rem;
+            }
+
+            .hero-glow::before {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            pre {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+
+            .code-block {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            .playground-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: stretch;
+            }
+
+            .playground-header>div {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2DD4BF",
+                        secondary: "#FB923C",
+                        accent: "#F472B6",
+                        dark: "#0f0f23",
+                        surface: "#1a1f2e",
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="radial-glow text-gray-100">
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="px-6 mb-6">
+            <h2 class="text-primary font-bold text-lg">MasalaScript</h2>
+            <p class="text-xs text-gray-500 mt-1">v1.0.0</p>
+        </div>
+        <a href="#hero" class="sidebar-link active">Overview</a>
+        <a href="#playground" class="sidebar-link">Playground</a>
+        <a href="#structure" class="sidebar-link">Program Structure</a>
+        <a href="#variables" class="sidebar-link">Variables</a>
+        <a href="#types" class="sidebar-link">Data Types</a>
+        <a href="#conditionals" class="sidebar-link">Conditionals</a>
+        <a href="#loops" class="sidebar-link">Loops</a>
+        <a href="#functions" class="sidebar-link">Functions</a>
+        <a href="#example" class="sidebar-link">Complete Example</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-with-sidebar">
+
+        <!-- HERO SECTION -->
+        <section id="hero"
+            class="hero-glow min-h-screen flex flex-col items-center justify-center px-6 py-20 relative z-10">
+            <div class="text-center animate-fade-in max-w-4xl">
+                <!-- Logo -->
+                <h1 class="logo-text mb-6">MasalaScript</h1>
+
+                <p class="text-xl md:text-2xl text-gray-300 mb-4">
+                    A <span class="text-primary font-semibold">Hinglish-inspired</span> programming language
+                </p>
+
+                <p class="text-gray-400 mb-8 text-sm md:text-base">
+                    Express logic with clarity, warmth, and structured control flow
+                </p>
+
+                <!-- Install command -->
+                <div class="mb-10 inline-block w-full max-w-md">
+                    <div class="bg-surface border border-primary/30 rounded-lg px-6 py-4 text-left">
+                        <code class="text-primary text-sm md:text-base break-all">
+                            <span class="text-gray-500">$</span> masalascript example.ms
+                        </code>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#playground" class="btn-primary w-full sm:w-auto text-center">
+                        Try Playground
+                    </a>
+                    <a href="#structure" class="btn-secondary w-full sm:w-auto text-center">
+                        View Documentation
+                    </a>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+                <div class="animate-bounce text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLAYGROUND SECTION -->
+        <section id="playground" class="max-w-6xl mx-auto px-6 py-20">
+            <h2 class="section-heading text-center mb-8">Interactive Playground</h2>
+            <p class="text-center text-gray-400 mb-8">
+                Try MasalaScript right in your browser
+            </p>
+
+            <div class="playground">
+                <div class="playground-header">
+                    <h3 class="text-lg font-semibold text-gray-100">Code Editor</h3>
+                    <div class="flex gap-2">
+                        <button class="btn-secondary" onclick="runCode()">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z">
+                                </path>
+                            </svg>
+                            Run
+                        </button>
+                        <button class="btn-secondary" onclick="clearCode()">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <textarea class="playground-editor" id="codeEditor" placeholder="Write your MasalaScript code here...">action!
+
+maan lo name = "Aman"
+maan lo score = 85
+
+agar kismat rahi (score >= 75) {
+    ek baat bataun: name, "has passed!"
+} warna {
+    ek baat bataun: name, "needs to improve"
+}
+
+paisa vasool</textarea>
+                <div class="playground-output" id="output">
+                    <div class="text-gray-500 text-sm">Output will appear here...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCUMENTATION SECTION -->
+        <section id="documentation" class="max-w-4xl mx-auto px-6 py-20">
+
+            <h2 class="section-heading text-center">Documentation</h2>
+            <p class="text-center text-gray-400 mb-16 text-lg">
+                MasalaScript (<span class="inline-code">.ms</span>) is a dynamically typed programming language with
+                Hinglish syntax
+            </p>
+
+            <!-- Program Structure -->
+            <div id="structure" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Program Structure</h3>
+                <p class="text-gray-400 mb-6">
+                    Every MasalaScript program begins with <span class="inline-code">action!</span> and ends with <span
+                        class="inline-code">paisa vasool</span>
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">action!</span>
+
+<span class="comment">// Your program logic goes here</span>
+
+<span class="primary-keyword">paisa vasool</span></code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Variables -->
+            <div id="variables" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Variables</h3>
+                <p class="text-gray-400 mb-6">
+                    Declare variables using <span class="inline-code">maan lo</span> (meaning "assume" or "let it be")
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="keyword">maan lo</span> count = 10
+<span class="keyword">maan lo</span> name = <span class="string">"Aman"</span>
+<span class="keyword">maan lo</span> isActive = <span class="keyword">sach</span></code></pre>
+
+                <p class="text-gray-500 text-sm mt-4">
+                    Variables are dynamically typed and mutable. Type inference is automatic.
+                </p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Data Types -->
+            <div id="types" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Data Types</h3>
+
+                <div class="overflow-x-auto">
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Example</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-gray-100 font-semibold">Number</td>
+                                <td><code class="text-primary">10, 3.14</code></td>
+                                <td>Integers and floating-point numbers</td>
+                            </tr>
+                            <tr>
+                                <td class="text-gray-100 font-semibold">String</td>
+                                <td><code class="text-accent">"Hello"</code></td>
+                                <td>Text enclosed in double quotes</td>
+                            </tr>
+                            <tr>
+                                <td class="text-gray-100 font-semibold">Boolean</td>
+                                <td><code class="text-secondary">sach, galat</code></td>
+                                <td>True or false values</td>
+                            </tr>
+                            <tr>
+                                <td class="text-gray-100 font-semibold">Null</td>
+                                <td><code class="text-secondary">khaali</code></td>
+                                <td>Represents no value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Conditionals -->
+            <div id="conditionals" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Conditionals</h3>
+                <p class="text-gray-400 mb-6">
+                    Use <span class="inline-code">agar kismat rahi</span> for if-statements, <span
+                        class="inline-code">nahi to</span> for else-if, and <span class="inline-code">warna</span> for
+                    else
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">agar kismat rahi</span> (score >= 90) {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Excellent!"</span>
+} <span class="primary-keyword">nahi to</span> (score >= 75) {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Good!"</span>
+} <span class="primary-keyword">warna</span> {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Keep trying!"</span>
+}</code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Loops -->
+            <div id="loops" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Loops</h3>
+                <p class="text-gray-400 mb-6">
+                    Loop while a condition is true using <span class="inline-code">jab tak hai jaan</span> ("as long as
+                    there's life")
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="keyword">maan lo</span> i = 1
+
+<span class="primary-keyword">jab tak hai jaan</span> (i <= 5) {
+    <span class="keyword">ek baat bataun:</span> i
+    i = i + 1
+}</code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Functions -->
+            <div id="functions" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Functions</h3>
+                <p class="text-gray-400 mb-6">
+                    Define functions with <span class="inline-code">climax</span> and return values using <span
+                        class="inline-code">dialogue wapas do</span>
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">climax</span> add(a, b) {
+    <span class="accent-keyword">dialogue wapas do</span> a + b
+}
+
+<span class="comment">// Call the function</span>
+<span class="keyword">maan lo</span> result = add(5, 3)
+<span class="keyword">ek baat bataun:</span> result  <span class="comment">// Outputs: 8</span></code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Complete Example -->
+            <div id="example" class="mb-20 animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-100 mb-4">Complete Example</h3>
+                <p class="text-gray-400 mb-6">
+                    A full MasalaScript program saved as <span class="inline-code">grade-checker.ms</span>
+                </p>
+
+                <pre class="code-block rounded-xl p-6 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="primary-keyword">action!</span>
+
+<span class="comment">// Grade checking program</span>
+<span class="keyword">maan lo</span> studentName = <span class="string">"Aman"</span>
+<span class="keyword">maan lo</span> score = 82
+
+<span class="keyword">ek baat bataun:</span> <span class="string">"Checking grade for:"</span>, studentName
+
+<span class="primary-keyword">agar kismat rahi</span> (score >= 90) {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Grade: A - Outstanding!"</span>
+} <span class="primary-keyword">nahi to</span> (score >= 75) {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Grade: B - Well done!"</span>
+} <span class="primary-keyword">nahi to</span> (score >= 60) {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Grade: C - Good effort!"</span>
+} <span class="primary-keyword">warna</span> {
+    <span class="keyword">ek baat bataun:</span> <span class="string">"Grade: D - Keep improving!"</span>
+}
+
+<span class="primary-keyword">paisa vasool</span></code></pre>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Key Features -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-bold text-gray-100 mb-8 text-center">Why MasalaScript?</h3>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="feature-card">
+                        <div class="text-3xl mb-3">🌶️</div>
+                        <h4 class="text-lg font-bold text-primary mb-2">Hinglish Syntax</h4>
+                        <p class="text-gray-400 text-sm">
+                            Express your logic in a familiar, culturally-rich language blend
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="text-3xl mb-3">⚡</div>
+                        <h4 class="text-lg font-bold text-primary mb-2">Dynamic Typing</h4>
+                        <p class="text-gray-400 text-sm">
+                            Write code faster with automatic type inference
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="text-3xl mb-3">🎯</div>
+                        <h4 class="text-lg font-bold text-primary mb-2">Clear Syntax</h4>
+                        <p class="text-gray-400 text-sm">
+                            Readable keywords that make your intent crystal clear
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-primary/20 py-12 text-center">
+            <div class="max-w-4xl mx-auto px-6">
+                <p class="text-gray-400 mb-2">
+                    &copy; 2025 <span class="text-primary font-semibold">MasalaScript</span>
+                </p>
+                <p class="text-gray-500 text-sm">
+                    A Hinglish programming language · <span class="text-secondary">.ms</span> file extension
+                </p>
+                <p class="text-gray-600 text-xs mt-4">
+                    Designed with flavor and discipline 🌶️
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Close sidebar when clicking on a link (mobile)
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+
+        // Update active link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id], div[id]');
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                const id = section.getAttribute('id');
+
+                if (scrollPos >= top && scrollPos < top + height) {
+                    document.querySelectorAll('.sidebar-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Copy code function
+        function copyCode(btn) {
+            const codeBlock = btn.nextElementSibling || btn.parentElement.querySelector('code');
+            const code = codeBlock.textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Placeholder compiler function
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            const output = document.getElementById('output');
+
+            output.innerHTML = '<div class="text-yellow-400 mb-2">⚠️ Compiler in development</div>';
+            output.innerHTML += '<div class="text-gray-400 text-sm">Your code:</div>';
+            output.innerHTML += '<pre class="text-gray-300 text-sm mt-2 whitespace-pre-wrap">' + escapeHtml(code) + '</pre>';
+            output.innerHTML += '<div class="text-green-400 mt-4">✓ Syntax appears valid</div>';
+        }
+
+        function clearCode() {
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('output').innerHTML = '<div class="text-gray-500 text-sm">Output will appear here...</div>';
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+
+</body>
+
+</html>
